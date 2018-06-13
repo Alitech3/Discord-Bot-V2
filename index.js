@@ -439,7 +439,7 @@ bot.on('message', async message => {
 				return message.channel.send({ files: ['C:/Users/Ali/Desktop/Projects/DiscordBotV2/Images/die.png'] });
 			}
 			else {
-				message.react(':die:450770801109762068');
+				message.react(':die:456523086733508609');
 				voiceChannel.join()
 					.then(connection => {
 						const stream = ytdl('https://www.youtube.com/watch?v=uKwUlAevqGI&ab_channel=skellington15', { filter : 'audioonly' });
