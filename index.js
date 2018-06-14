@@ -543,18 +543,6 @@ bot.on('message', async message => {
 		}
 	}
 	/*
-**messing with type conversion
-	if (message.content == 1) { // compare equality after conversion
-		message.channel.send('d');
-	}
-	if (message.content === 1) { // will not convert and compare as is
-		message.channel.send('z');
-	}
-	when looking for number values == is needed because the user enters it as a string but we are looking for a numerical value
-	if we do not use == the code block may not run even though the user inputted what was needed
-
-	end of type coversion
-
 	if (message.content === 'testing') {
 		// random numer in a array
 		// this command only exists for referance
@@ -577,13 +565,6 @@ bot.on('message', async message => {
 	}
 });
 
-/*
-pls kill @GhostsLikeToast
-
-Alitech decapitates GhostsLikeToast with a sword.
-
-¡Viva la Revolución!
-*/
 
 
 bot.login(Settings.Token);
