@@ -16,6 +16,8 @@ const fs = require('fs');
 
 const ytdl = require('ytdl-core');
 
+const https = require('https');
+
 const bot = new Discord.Client();
 
 const queue = new Map();
@@ -25,14 +27,17 @@ const Settings = require('./botsettings.json');
 // in index.js file, get controller for spam messages
 const spamCtrl = require('./spamCtrl');
 
+// const err = false;
+
 process.on('unhandledRejection', error => console.error(`Uncaught Promise Rejection:\n${error}`));
+// bot.channels.get('482962662289047555').send(console.error)
 
 bot.on('warn', console.warn);
 
 bot.on('error', console.error);
 
 bot.on('ready', () => {
-	bot.user.setPresence({ status: 'online', game: { type: 'WATCHING', name: 'over Mars || --help' } }).then(console.log(`
+	bot.user.setPresence({ status: 'idle', game: { type: 'WATCHING', name: 'over Mars || --help' } }).then(console.log(`
 	Username = ${bot.user.tag}
 	Prefix = --
 	Avatar = ${bot.user.avatarURL}
@@ -79,6 +84,7 @@ bot.on('message', async message => {
 		return items[Math.floor(Math.random() * items.length)];
 
 	}
+
 	function date(uptime) {
 		// day, hours, minutes, seconds, (maybe milliseconds)
 		const milliseconds = uptime;
@@ -105,7 +111,6 @@ bot.on('message', async message => {
 
 		return (timeStr.filter(g => !g.startsWith('0')).join(', '));
 	}
-	// .catch(console.log); = if you screw something up it might not break everything.? dont quote me
 	// the following looks for the prefix
 	if (message.content.indexOf(Settings.Prefix) === 0) {
 
@@ -144,7 +149,7 @@ bot.on('message', async message => {
 			message.channel.send('Not broken, mostly.\n\n\nhttps://cdn.discordapp.com/attachments/397960122527383562/453935270665125901/FullSizeRender_preview.jpeg');
 		}
 		if (message.content === `${Settings.Prefix}support`) {
-			message.channel.send('https://discord.gg/hZ4zqbC');
+			message.channel.send('https://discord.gg/k6T7UKP');
 		}
 		if (message.content === `${Settings.Prefix}id`) {
 			message.channel.send(message.author.id);
@@ -218,6 +223,10 @@ bot.on('message', async message => {
 				.setTimestamp();
 			message.channel.send({ embed });
 		}
+		// dice game
+		if (message.content == `${Settings.Prefix}dice`) {
+			message.channel.send('this command is under construction');
+		}
 		// if (!message.guild) return;
 
 		if (message.content === `${Settings.Prefix}join`) {
@@ -281,13 +290,11 @@ bot.on('message', async message => {
 		// only i can flip tables.
 		// you know what screw it FLIP ALL THE TABLES
 		if (message.content === '(╯°□°）╯︵ ┻━┻') {
-			message.channel.send('We do NOT throw tables in this server. We are civilized people!\n┬─┬﻿ ノ( ゜-゜ノ)');
+			const items = ['We do NOT throw tables in this server. We are civilized people!\n┬─┬﻿ ノ( ゜-゜ノ)', 'FLIP ALL OF THE TABLES!\n (ﾉಥ益ಥ）ﾉ﻿ ┻━┻', 'FLIP EVERYTHING! EVEN THE COMPUTERS!\n\n (ノÒ益Ó)ノ彡▔▔▏\n\n ┻━┻ ︵ヽ(`Д´)ﾉ︵﻿ ┻━┻'];
+			message.channel.send(random_item(items));
 		}
 		if (message.content === '┬─┬ ノ( ゜-゜ノ)') {
 			message.channel.send('Yep, that\'s the right thing to do. Clean up the server, table by table! \n ┬─┬﻿ ノ( ゜-゜ノ)');
-		}
-		if (message.content === 'pls boo') {
-			message.reply('RIP You.');
 		}
 		if (message.content === 'pls help') {
 			message.reply('CHECK THE PINNED MESSAGES');
@@ -301,9 +308,6 @@ bot.on('message', async message => {
 			}
 		}
 		if (message.content === '') {
-			if (message.guild.id === '372910390625173504') {
-				return console.log(`blocked in ${message.guild.name} => Vive la ___`);
-			}
 			if (message.author.id === Settings.BotID) {
 				return;
 			}
@@ -351,18 +355,10 @@ bot.on('message', async message => {
 			}
 			message.reply('its ctrl+v.');
 		}
-		if (message.content.startsWith('THIS BOI')) {
-			if (message.author.bot) {
-				message.channel.send('LoOk aT Me iM Mr. MeEsEeKs');
-			}
-		}
 		if (message.author.id === '159985870458322944') {
 			message.channel.send('LoOk aT Me iM Mr. MeEsEeKs');
 		}
-		if (message.content === 'spam') {
-			if (message.guild.id === '372910390625173504') {
-				return console.log(`blocked in ${message.guild.name} => spam`);
-			}
+		if (message.content.startsWith('spam')) {
 			if (message.author.bot) {
 				return;
 			}
@@ -428,11 +424,18 @@ bot.on('message', async message => {
 				message.reply('no');
 			}
 		}
-		if(message.content === 'score') {
+		if (message.content === 'score') {
 			message.channel.send('Computer : 3\nMath : 7\nMe : 1\nScrew it everything is broken: 10');
 		}
+		if (message.content == 'pls ducc') {
+			const items = ['https://assets.rbl.ms/17222882/origin.jpg', 'https://cdn.discordapp.com/attachments/282663271507689473/482396666792771584/CV9htLiWcAArTvv.png', 'https://cdn.discordapp.com/attachments/282663271507689473/482396666499039252/1151084.jpg', 'https://cdn.discordapp.com/attachments/282663271507689473/482396666490519562/Quackbar-2.jpg', 'https://cdn.discordapp.com/attachments/282663271507689473/482396657325965343/screen-shot-2015-11-28-at-13-21-06.png', 'https://cdn.discordapp.com/attachments/282663271507689473/482396655010709515/24893-1fea6gi.jpg', 'https://cdn.discordapp.com/attachments/282663271507689473/482396653710737418/SY6EWN8.jpg', 'https://media.discordapp.net/attachments/455829376093782048/484157409988837386/unknown.png?width=400&height=300',		'https://media.discordapp.net/attachments/455829376093782048/484157511847641100/unknown.png?width=364&height=301', 'https://media.discordapp.net/attachments/455829376093782048/484157640390475806/unknown.png?width=300&height=300', 'https://media.discordapp.net/attachments/455829376093782048/484157742005616641/unknown.png?width=300&height=300', 'https://media.discordapp.net/attachments/455829376093782048/484158183351517194/unknown.png?width=400&height=267', 'https://media.discordapp.net/attachments/455829376093782048/484158220928155659/unknown.png', 'https://cdn.discordapp.com/attachments/455829376093782048/481987375065726996/ussr.png' ];
+			message.channel.send (random_item(items)).then(msg => {
+				if(message.author.id == 270904126974590976) {
+					message.delete();
+				}
+			});
+		}
 		if (tolowercase === 'die') {
-			message.react(':die:450770801109762068');
 			const { voiceChannel } = message.member;
 
 			if (!voiceChannel) {
@@ -443,11 +446,20 @@ bot.on('message', async message => {
 				voiceChannel.join()
 					.then(connection => {
 						const stream = ytdl('https://www.youtube.com/watch?v=uKwUlAevqGI&ab_channel=skellington15', { filter : 'audioonly' });
-						const dispatcher = connection.playStream(stream);
+						const dispatcher = connection.playStream(stream).setVolume(0.098);
 
 						dispatcher.on('end', () => voiceChannel.leave());
 					}).catch(console.error);
 			}
+		}
+		if (tolowercase === 'fbi') {
+			const { voiceChannel } = message.member;
+			voiceChannel.join()
+				.then(connection => {
+					const stream = ytdl('https://www.youtube.com/watch?v=b8i921cgWwE&ab_channel=KingVoov', { filter : 'audioonly' });
+					const dispatcher = connection.playStream(stream).setVolume(0.098);
+					dispatcher.on('end', () => voiceChannel.leave());
+				}).catch(console.error);
 		}
 		if (/abc/.exec(message.content)) {
 			message.react('🌲');
@@ -456,17 +468,26 @@ bot.on('message', async message => {
 				return;
 			}
 			voiceChannel.join().then(connection => {
-				const stream = ytdl('https://www.youtube.com/watch?v=g4Gj5sGnXS8&ab_channel=SpeedingBlurrZ', { filter : 'audioonly', volume : 2 });
-				const dispatcher = connection.playStream(stream);
+				const stream = ytdl('https://www.youtube.com/watch?v=g4Gj5sGnXS8&ab_channel=SpeedingBlurrZ', { filter : 'audioonly' });
+				const dispatcher = connection.playStream(stream).setVolume(0.098);
 				dispatcher.on('end', () => voiceChannel.leave());
 			}).catch(console.error);
 		}
 		if (message.content === 'asd') {
 			const { voiceChannel } = message.member;
 			voiceChannel.join().then(connection => {
-				const stream = ytdl('https://www.youtube.com/watch?v=Qp55_8nSz1c', { seek : 3 });
+				const stream = ytdl('https://www.youtube.com/watch?v=Qp55_8nSz1c');
 				const dispatcher = connection.playStream(stream);
 				dispatcher.on('end', () => voiceChannel.leave()).catch(console.error);
+			});
+		}
+		// unfinished
+		if (message.content === 'it was') {
+			const { voiceChannel } = message.member;
+			voiceChannel.join().then(connection => {
+				const stream = ytdl('https://www.youtube.com/watch?v=kc0ZTB0qFyI&feature=youtu.be&t=39');
+				const dispatcher = connection.playStream(stream);
+				dispatcher.on('end', () => voiceChannel.leave());
 			});
 		}
 		if (message.content == 'gg') {
@@ -487,6 +508,51 @@ bot.on('message', async message => {
 	}
 
 	// test commands
+	if (message.content.startsWith('pls magik')) {
+		try {
+			const reqURL = 'https://discord.services/api/magik?url=';
+			const magik = reqURL + message.content.substr(10);
+
+			//	const datasrc = URLParse(magik);
+			https.request(magik, (resp) => {
+				let data = '';
+				resp.on('data', (chunk) => {
+					data += chunk;
+				});
+				resp.on('end', () => {
+					message.channel.send({ files: [
+						JSON.parse(data)] });
+					console.log((data));
+				});
+			}).on('error', (err) => {
+				console.log('Error: ' + err.message);
+			});
+		/*
+		https.get('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY', (resp) => {
+				let data = '';
+				resp.on('data', (chunk) => {
+					data += chunk;
+				});
+				resp.on('end', () => {
+					console.log(JSON.parse(data).explanation);
+					message.channel.send(JSON.parse(data).explanation, { files: [
+						data] });
+				});
+			}).on('error', (err) => {
+				console.log('Error: ' + err.message);
+			});*/
+		}
+		catch(error) {
+			console.error(error);
+		}
+	}
+	// https://discord.services/api/magik?url=$URL
+	if (message.content.includes('level')) {
+		if(message.author.id === 159985870458322944) {
+			// this needs to be RegEx so as to accouunt for the level # (will need to look into regex)
+			message.channel.send('LoOk aT Me iM Mr. MeEsEeKs');
+		}
+	}
 	if (message.content === 'a') {
 		const x = Math.random();
 		const y = Math.random();
@@ -542,7 +608,27 @@ bot.on('message', async message => {
 			message.channel.send(i);
 		}
 	}
+	if (message.content === 'https') {
+		const request = require('request');
+		request('http://www.google.com', function(error, response, body) {
+			console.log('error:', error); // Print the error if one occurred
+			console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+			console.log('body:', body); // Print the HTML for the Google homepage.
+		});
+	}
 	/*
+**messing with type conversion
+	if (message.content == 1) { // compare equality after conversion
+		message.channel.send('d');
+	}
+	if (message.content === 1) { // will not convert and compare as is
+		message.channel.send('z');
+	}
+	when looking for number values == is needed because the user enters it as a string but we are looking for a numerical value
+	if we do not use == the code block may not run even though the user inputted what was needed
+
+	end of type coversion
+
 	if (message.content === 'testing') {
 		// random numer in a array
 		// this command only exists for referance
@@ -555,16 +641,24 @@ bot.on('message', async message => {
 	// if(!message.content.startsWith(bot.Settings.Prefix)) return;
 	// ! =not; if message content does not start with Prefix it stops reading
 	// add option for a global universal queue explorer in reference to voice (7,0) (server const)
-
-	if (message.content.startsWith('eval')) {
-		if (message.author.id !== Settings.OwnerID) {
+	if (message.content.startsWith('lkf')) {
+		if (message.author !== Settings.OwnerID) {
 			return;
 		}
-		const x = message.content.substr(4);
-		message.channel.send(eval(x));
+		const id = message.content.substr(4);
+		if (!id) { return message.channel.send('no id'); }
+		bot.channels.get(id).send('what is going on in here');
 	}
+
 });
 
+/*
+pls kill @GhostsLikeToast
+
+Alitech decapitates GhostsLikeToast with a sword.
+
+¡Viva la Revolución!
+*/
 
 
 bot.login(Settings.Token);

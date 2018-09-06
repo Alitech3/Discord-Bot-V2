@@ -1,5 +1,7 @@
+// const { message } = require('discord.js');
 let spamming = false;
 let spamChannel = undefined;
+// const args = message.content.split(/ +/g);
 
 // spam function repeats until variable spamming is false
 function spam() {
@@ -8,7 +10,7 @@ function spam() {
 		// add check to make sure discord channel exists
 		if (!spamChannel) {reject('Channel is undefined!');}
 		// send message on spam channel
-		spamChannel.send('spam')
+		spamChannel.send(`spam`)
 			.then(msg => {
 				// wait 100 ms until sending next spam message
 				setTimeout(() => {
@@ -53,5 +55,8 @@ module.exports = {
 	// not used in my commands, but you may find this useful somewhere
 	getStatus: function() {
 		return spamming;
+	},
+	getMessage: function() {
+		return args;
 	},
 };
