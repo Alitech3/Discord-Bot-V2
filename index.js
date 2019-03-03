@@ -32,6 +32,8 @@ const spamCtrl = require('./spamCtrl');
 process.on('unhandledRejection', error => console.error(`Uncaught Promise Rejection:\n${error}`));
 // bot.channels.get('482962662289047555').send(console.error)
 
+process.on('error', error => console.error(`uncaught error : \n${error}`));
+
 bot.on('warn', console.warn);
 
 bot.on('error', console.error);
@@ -70,6 +72,56 @@ bot.on('typingStart', () => {
 bot.on('typingStop', () => {
 	setTimeout(function() { bot.user.setPresence({ status: 'idle' });}, 10000);
 });
+/*
+
+*/
+
+bot.on('messageUpdate', (oldMessage, newMessage) => {
+	if (oldMessage.guild.id != '455764570829488128') {
+		return null;
+	}
+	if (oldMessage.author == bot) {
+		return null;
+	}
+	if (newMessage.channel.id == '524587366166560768') {
+		return null;
+	}
+	if (newMessage == null) {
+		return null;
+	}
+	const embed = new Discord.RichEmbed()
+		.setTitle('Message Update')
+		.setDescription(`Old Message Sent - ${oldMessage.createdAt}\n\nNew Message Sent - ${newMessage.editedAt}`)
+		.setThumbnail(oldMessage.author.avatarURL)
+		.addField('Message Author', oldMessage.author)
+		.addField('Old Message', `***\`${oldMessage}\`***`)
+		.addField('New Message', `***\`${newMessage}\`***`)
+		.setFooter(oldMessage.channel.name)
+		.setTimestamp();
+	bot.channels.get('524587366166560768').send(embed);
+});
+
+bot.on('messageDelete', (oldMessage)=> {
+	if (oldMessage.guild.id != '455764570829488128') {
+		return null;
+	}
+	if (oldMessage.author == bot) {
+		return null;
+	}
+	if (oldMessage.channel.id == '524587366166560768') {
+		return null;
+	}
+	const embed = new Discord.RichEmbed()
+		.setTitle('Message Removed')
+		.setDescription(`Old Message Sent - ${oldMessage.createdAt}`)
+		.setThumbnail(oldMessage.author.avatarURL)
+		.addField('Message Author', oldMessage.author)
+		.addField('Old Message', `***\`${oldMessage}\`***`)
+		.setFooter(oldMessage.channel.name)
+		.setTimestamp();
+	bot.channels.get('524587366166560768').send(embed);
+});
+
 // for the servers that message is banned in : if one of the banned messages is sent to the bot as a dm...
 // it will crash the bot giving a cant read property id of null
 bot.on('message', async message => {
@@ -127,6 +179,12 @@ bot.on('message', async message => {
 			// need to add --uptime
 			message.channel.send('BotV1-(Under Construction)\nPrefix : --\n--ping : Pings the server.\n--say : Type what you want the bot to say.\n--support : Creates an invite to Bot Testing("Support Server").\n--invite : Sends the link to invite the bot to your server.\n--id : Sends your user ID.\n--serverinfo : Fetches server information\n--avatar : Sends your avatar\n--delete : Deletes up to 100 messages\n --join : Makes the bot join the voice channel you are in\n --dis : Disconnects the bot\n--play "URL" : Plays any youtube video you want, just add the link\n --stop : Stops the audio and disconnects the bot\n\nPlus respones to certain messages\nsee if you cant find them all there are 14 in total');
 		}
+		if (message.content === `${Settings.Prefix}Nuke`) {
+			message.channel.send('Nukeing...')
+				.then(() => bot.destroy())
+				.then(() => bot.login(Settings.Token))
+				.then(msg => message.channel.send('Reconnected'));
+		}
 		if (message.content === `${Settings.Prefix}uptime`) {
 			// must change uptime to mins, secs, etc
 		//	const uptime = bot.uptime;
@@ -146,7 +204,7 @@ bot.on('message', async message => {
 				message.reply('You are not allowed to use this command');
 				return;
 			}
-			message.channel.send('Not broken, mostly.\n\n\nhttps://cdn.discordapp.com/attachments/397960122527383562/453935270665125901/FullSizeRender_preview.jpeg');
+			message.channel.send('Not broken, mostly.');
 		}
 		if (message.content === `${Settings.Prefix}support`) {
 			message.channel.send('https://discord.gg/k6T7UKP');
@@ -166,7 +224,7 @@ bot.on('message', async message => {
 		if (message.content.indexOf(`${Settings.Prefix}delete`) === 0) {
 			try {
 				const x = message.content.substr(8);
-				if (!message.content.substr(8)) {
+				if (!x) {
 					return message.channel.send('Please specify the amount of message you wish to delete.');
 				}
 				if (isNaN(x)) {
@@ -204,8 +262,8 @@ bot.on('message', async message => {
 			}
 		}
 		// needs fixed
-		if (message.content === `${Settings.Prefix}avatar`) {
-			message.channel.send(`${message.author.avatarURL}`);
+		if (message.content.startsWith(`${Settings.Prefix}avatar`)) {
+			message.channel.send(message.mentions.users.first().avatarURL);
 		}
 		if (message.content === `${Settings.Prefix}invite`) {
 			message.channel.send('https://discordapp.com/oauth2/authorize?client_id=354048815273345035&scope=bot&permissions=8');
@@ -413,6 +471,12 @@ bot.on('message', async message => {
 			}
 			message.reply('no');
 		}
+		if (message.content.startsWith('lkf ')) {
+			const id = message.content.split('lkf ');
+			console.log(id);
+			if (!id) { return message.channel.send('no id'); }
+			bot.channels.get(id).send(message.content.split('lkf' + id).join(' '));
+		}
 		if (tolowercase === 'maybe') {
 			if (message.guild.id === '372910390625173504') {
 				return console.log(`blocked in ${message.guild.name} => yes`);
@@ -458,6 +522,15 @@ bot.on('message', async message => {
 				.then(connection => {
 					const stream = ytdl('https://www.youtube.com/watch?v=b8i921cgWwE&ab_channel=KingVoov', { filter : 'audioonly' });
 					const dispatcher = connection.playStream(stream).setVolume(0.098);
+					dispatcher.on('end', () => voiceChannel.leave());
+				}).catch(console.error);
+		}
+		if (tolowercase === 'nani') {
+			const { voiceChannel } = message.member;
+			voiceChannel.join()
+				.then(connection => {
+					const stream = ytdl('https://www.youtube.com/watch?v=nBjlpnuA89c', { filter : 'audioonly' });
+					const dispatcher = connection.playStream(stream).setVolume(0.1);
 					dispatcher.on('end', () => voiceChannel.leave());
 				}).catch(console.error);
 		}
@@ -641,24 +714,8 @@ bot.on('message', async message => {
 	// if(!message.content.startsWith(bot.Settings.Prefix)) return;
 	// ! =not; if message content does not start with Prefix it stops reading
 	// add option for a global universal queue explorer in reference to voice (7,0) (server const)
-	if (message.content.startsWith('lkf')) {
-		if (message.author !== Settings.OwnerID) {
-			return;
-		}
-		const id = message.content.substr(4);
-		if (!id) { return message.channel.send('no id'); }
-		bot.channels.get(id).send('what is going on in here');
-	}
 
 });
-
-/*
-pls kill @GhostsLikeToast
-
-Alitech decapitates GhostsLikeToast with a sword.
-
-¡Viva la Revolución!
-*/
 
 
 bot.login(Settings.Token);
