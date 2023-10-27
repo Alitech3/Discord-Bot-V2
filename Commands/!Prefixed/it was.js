@@ -1,9 +1,25 @@
-exports.run = (Vargs, voiceChannel, message, ytdl, Discord) => {
-       voiceChannel.join().then(connection => {
-        const stream = ytdl('https://www.youtube.com/watch?v=kc0ZTB0qFyI&feature=youtu.be&t=39');
+// Original
+return;
 
-        const dispatcher = connection.playStream(stream,  { seek: 0, volume: 2.5/10 });
-
-        dispatcher.on('end', () => voiceChannel.leave());
-    });
+module.exports = {
+	name: 'it was',
+	description: undefined,
+	// eslint-disable-next-line no-unused-vars
+	execute(Command, message, ytdl, bot, Discord) {
+		const voiceChannel = message.member.voice.channel;
+		// message.react('📻');
+		if (!voiceChannel) {
+			return;
+		}
+		voiceChannel.join()
+			.then(connection => {
+				if (connection.speaking.has('SPEAKING')) {
+					return message.react('❌');
+				} else {
+					const stream = ytdl('https://www.youtube.com/watch?v=kc0ZTB0qFyI&feature=youtu.be&t=39');
+					const dispatcher = connection.play(stream, { volume: 0.35 });
+					dispatcher.on('finish', () => voiceChannel.leave());
+				}
+			}).catch(error => console.error(error));
+	},
 };

@@ -1,14 +1,27 @@
-exports.run = (Vargs, voiceChannel, message, ytdl, Discord) => {
-			message.react('🌲');
-			if (!voiceChannel) {
-				return;
-			}
-			voiceChannel.join().then(connection => {
-				const stream = ytdl('https://www.youtube.com/watch?v=g4Gj5sGnXS8&ab_channel=SpeedingBlurrZ', { filter : 'audioonly' });
+// Original
+return;
+module.exports = {
+	name: 'abc',
+	description: undefined,
+	// eslint-disable-next-line no-unused-vars
+	execute(Command, message, ytdl, bot, Discord) {
+		return;
+		const voiceChannel = message.member.voice.channel;
+		message.react('🌲');
+		if (!voiceChannel) {
+			return;
+		}
+		voiceChannel.join()
+			.then(connection => {
+				if (connection.speaking.has('SPEAKING')) {
+					return message.react('❌');
+				} else {
+					const stream = ytdl('https://www.youtube.com/watch?v=g4Gj5sGnXS8&ab_channel=SpeedingBlurrZ', { filter : 'audioonly' });
+	
+					const dispatcher = connection.play(stream,  { volume: 0.35 });
 
-				const dispatcher = connection.playStream(stream,  { seek: 0, volume: 1.5/10 });
-				
-				dispatcher.on('end', () => voiceChannel.leave());
-
-			}).catch(console.error);
-		};
+					dispatcher.on('finish', () => voiceChannel.leave());
+				}
+			}).catch(error => console.error(error));
+	},
+};

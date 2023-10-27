@@ -1,6 +1,3 @@
-/Audio
-botsettings.json
-
 ### Node ###
 # Logs
 logs
@@ -159,3 +156,11 @@ dist
 # Ignore all local history of files
 .history
 .ionide
+
+*.sqlite
+.vscode/launch.json
+Error Log
+*.lnk
+.eslintrc.json
+/Audio
+botsettings.json

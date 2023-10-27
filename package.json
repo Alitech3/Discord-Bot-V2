@@ -1,21 +1,46 @@
 {
-  "name": "discordbotv2",
-  "version": "1.0.0",
-  "description": "audio priority",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "discord.js": "^11.3.2",
-    "ffmpeg-binaries": "^3.2.2-3",
-    "fs": "0.0.1-security",
-    "get-youtube-id": "^1.0.0",
-    "node-opus": "^0.2.7",
-    "request": "^2.85.0",
-    "youtube-info": "^1.2.0",
-    "ytdl-core": "^0.20.2"
-  }
+	"name": "Ascraeus",
+	"version": "2.0.0.",
+	"description": "A discord bot.",
+	"author": {
+		"name": "Ali Chapman",
+		"url": "https://www.alichapman.dev"
+	},
+	"bin": "index.js",
+	"pkg": {
+		"targets": [
+			"node16-win-x64"
+		],
+		"assets": [
+			"./Audio/**/*",
+			"./node_modules/ffmpeg-static/**/*",
+			"./node_modules/opusscript/build/opusscript_native_wasm.wasm",
+			"./node_modules/ffmpeg-static/ffmpeg.exe"
+		],
+		"outputPath": "dist"
+	},
+	"dependencies": {
+		"@discordjs/voice": "^0.13.0",
+		"@lorki97/node-resourcehacker": "^1.3.1",
+		"better-sqlite3": "^7.6.2",
+		"bindings": "^1.5.0",
+		"canvas": "^2.10.2",
+		"cleverbot-free": "^1.1.10",
+		"discord.js": "^13.11.0",
+		"eslint": "^8.13.0",
+		"ffmpeg-static": "^4.4.1",
+		"libsodium-wrappers": "^0.7.10",
+		"node-resourcehacker": "^1.2.1",
+		"opusscript": "^0.0.7",
+		"pkg": "^5.8.0",
+		"quick.db": "^7.1.3",
+		"snekfetch": "^4.0.4",
+		"sodium-native": "^3.4.1",
+		"tarot-deck": "^2.0.1",
+		"ytdl-core": "^4.11.2",
+		"ytsr": "^3.7.0"
+	},
+	"devDependencies": {
+		"@angablue/exe": "^1.1.6"
+	}
 }
